@@ -8,8 +8,6 @@
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
 [![ClickHouse](https://img.shields.io/badge/ClickHouse-FFCC00?style=for-the-badge&logo=clickhouse&logoColor=black)](https://clickhouse.com/)
 
-[English Version](./README-en.md) | [Vietnamese Version](./README.md)
-
 ---
 
 ## 📌 Project Overview
