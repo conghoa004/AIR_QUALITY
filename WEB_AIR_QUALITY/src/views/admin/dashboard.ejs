@@ -1,0 +1,103 @@
+<!-- Custom CSS -->
+<link rel="stylesheet" href="/css/admin/dashboard.css">
+
+<!--begin::App Content-->
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <!-- Weather hiện tại -->
+            <div class="col-12 col-lg-6 mb-3 mb-lg-0">
+                <div class="card shadow-sm h-100 rounded-4" id="weather-card"
+                    style="background: linear-gradient(135deg, #0D6EFD, #5a9cff); color: #fff;">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <img id="weather-icon" src="" alt="Weather" class="img-fluid" style="width:80px; height:80px;">
+                        <div>
+                            <h2 id="weather-temp" class="fw-bold mb-1" style="font-size:2rem;">--°C</h2>
+                            <p id="weather-desc" class="mb-1">Đang tải...</p>
+                            <p class="mb-0 small">
+                                <i class="bi bi-droplet-fill"></i> <span id="weather-humidity">--%</span>
+                                &nbsp;&nbsp;
+                                <i class="bi bi-wind"></i> <span id="weather-wind">-- m/s</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forecast 5 ngày -->
+            <div class="col-12 col-lg-6">
+                <div class="d-flex gap-2 flex-wrap" id="forecast"></div>
+            </div>
+        </div>
+
+        <!-- Bản đồ chất lượng không khí -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="card shadow-sm h-100 rounded-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0 chart-title fw-bold" style="color: #1e69b5;">Bản đồ chất lượng không
+                            khí</h5>
+                    </div>
+                    <div class="card-body p-0 position-relative">
+                        <!-- Thanh công cụ nổi bên trong bản đồ -->
+                        <div class="map-toolbar position-absolute top-0 end-0 w-100 p-3" style="z-index: 1000;">
+                            <div class="d-flex flex-wrap gap-2 align-items-center backdrop-blur rounded-4">
+                                <!-- Ô tìm kiếm -->
+                                <div class="input-group" style="max-width: 280px;">
+                                    <span class="input-group-text bg-primary text-white border-0">
+                                        <i class="bi bi-search"></i>
+                                    </span>
+                                    <input type="text" id="mapSearchInput" class="form-control border-0 shadow-none"
+                                        placeholder="Tìm vị trí node...">
+                                </div>
+
+                                <!-- Nút chức năng -->
+                                <div class="d-flex gap-2">
+
+                                    <div class="dropdown">
+                                        <button class="btn btn-primary rounded-pill px-3 shadow-sm"
+                                            type="button" id="timeRangeButton" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <i class="bi bi-clock-history"></i> Live
+                                        </button>
+
+                                        <!-- <button class="btn btn-primary rounded-pill px-3 dropdown-toggle shadow-sm"
+                                            type="button" id="timeRangeButton" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <i class="bi bi-clock-history"></i> Live
+                                        </button> -->
+
+                                        <!-- <ul class="dropdown-menu shadow-sm rounded-3 p-2"
+                                            aria-labelledby="timeRangeDropdown" style="min-width: 250px;">
+                                            <li><a class="dropdown-item time-range rounded-2" href="#" data-range="0"><i
+                                                        class="bi bi-broadcast"></i> Live</a></li>
+                                            <li><a class="dropdown-item time-range rounded-2" href="#" data-range="1"><i
+                                                        class="bi bi-clock"></i> 24h</a></li>
+                                        </ul> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bản đồ -->
+                        <div id="airQualityMap" style="height: 500px; width: 100%; border-radius: 0 0 1rem 1rem;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Moment.js và Moment Timezone -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
+
+        <!-- Leaflet CDN -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+        <!-- Custom JavaScript -->
+        <script type="module" src="/js/admin/dashboard-map.js"></script>
+        <script src="/js/admin/dashboard-wheather.js"></script>
+        <script src="/js/components/toast.js"></script>
+    </div>
+    <!--end::App Content-->

@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  flask-ai:
+    build: .
+    container_name: flask-ai
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env-docker
+    volumes:
+      - ./model:/app/model
+    restart: unless-stopped
+    networks:
+      - bigdata-network
+
+networks:
+  bigdata-network:
+    external: true

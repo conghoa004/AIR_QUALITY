@@ -1,0 +1,53 @@
+/* Bảng điểm AQI */
+.aqi-badge {
+  color: #000;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+  /* Hiệu ứng đổi màu mượt */
+}
+
+/* BẢNG SO SÁNH */
+/* Hiệu ứng gradient mượt */
+.bg-gradient-to-right {
+  background: linear-gradient(135deg, var(--bs-primary), var(--bs-info));
+}
+
+.bg-gradient-to-right.from-success.to-teal {
+  background: linear-gradient(135deg, var(--bs-success), #20c997);
+}
+
+/* Thẻ trạm nổi bật */
+.station-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.station-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Highlight chỉ số cao hơn */
+.bg-danger-subtle {
+  background-color: rgba(255, 77, 77, 0.15) !important;
+  border-radius: 8px;
+  padding: 2px 6px;
+}
+
+/* Button gradient */
+.btn-gradient {
+  background: linear-gradient(to right, #0d6efd, #20c997);
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+a {
+  cursor: pointer;
+}

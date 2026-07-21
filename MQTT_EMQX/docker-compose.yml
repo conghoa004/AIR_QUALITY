@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  emqx:
+    image: emqx/emqx:latest
+    container_name: emqx
+    restart: always
+    ports:
+      - "1883:1883"
+      - "8883:8883"
+      - "8083:8083"
+      - "8084:8084"
+      - "18083:18083"
+    volumes:
+      - ./certs:/opt/emqx/certs   # Mount thư mục chứa cert
+    environment:
+      - EMQX_NAME=emqx
+      - EMQX_HOST=hoaze.emqx.io
+
+      # Bật TLS 2 chiều (mTLS)
+      - EMQX_LISTENERS__SSL__DEFAULT__BIND=0.0.0.0:8883
+      - EMQX_LISTENERS__SSL__DEFAULT__SSL_OPTIONS__KEYFILE=/opt/emqx/certs/server.key
+      - EMQX_LISTENERS__SSL__DEFAULT__SSL_OPTIONS__CERTFILE=/opt/emqx/certs/server.crt
+      - EMQX_LISTENERS__SSL__DEFAULT__SSL_OPTIONS__CACERTFILE=/opt/emqx/certs/rootCA.crt
+      - EMQX_LISTENERS__SSL__DEFAULT__SSL_OPTIONS__VERIFY=verify_peer
+      - EMQX_LISTENERS__SSL__DEFAULT__SSL_OPTIONS__FAIL_IF_NO_PEER_CERT=true
+      - EMQX_LISTENERS__SSL__DEFAULT__SSL_OPTIONS__ENABLE_CRL_CHECK=true   # <-- bật CRL check
+    networks:
+      - bigdata-network
+  
+  # Chạy server CRL:
+  flask-app:
+    build: .
+    container_name: flask-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./certs:/app/certs:ro
+    command: >
+      python -u app.py
+    networks:
+      - bigdata-network
+    depends_on:
+      - emqx
+
+networks:
+  bigdata-network:
+    external: true

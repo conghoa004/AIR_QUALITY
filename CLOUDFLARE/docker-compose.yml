@@ -1,0 +1,11 @@
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token <token>
+    networks:
+      - bigdata-network
+
+networks:
+  bigdata-network:
+    external: true

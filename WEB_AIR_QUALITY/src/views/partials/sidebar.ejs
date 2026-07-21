@@ -1,0 +1,120 @@
+<link rel="stylesheet" href="/css/partials/sidebar.css">
+
+<!--begin::Sidebar-->
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+    <!-- Sidebar Brand -->
+    <div class="sidebar-brand">
+        <a href="/" class="brand-link d-flex align-items-center">
+            <span class="brand-text">
+                <span class="fw-light font-custom text-info">Air</span>
+                <span class="fw-bold text-warning">Quality</span>
+            </span>
+        </a>
+    </div>
+
+    <!-- Sidebar Wrapper -->
+    <div class="sidebar-wrapper">
+        <nav class="mt-2">
+            <ul class="nav sidebar-menu flex-column" role="navigation" data-accordion="false">
+
+                <!-- TRANG CHỦ -->
+                <li class="nav-item">
+                    <a href="/" class="nav-link active">
+                        <i class="nav-icon bi bi-speedometer2 text-info"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+
+                <!-- QUẢN LÝ -->
+                <li class="nav-header text-uppercase text-muted fw-semibold fs-6 mt-2 mb-1">
+                    <i class="bi bi-hdd-network me-1"></i> Quản lý
+                </li>
+
+                <li class="nav-item">
+                    <a href="/manager/user" class="nav-link">
+                        <i class="nav-icon bi bi-person-circle text-info"></i>
+                        <p>Tài khoản</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="/manager/device" class="nav-link">
+                        <i class="nav-icon bi bi-thermometer-half text-warning"></i>
+                        <p>Trạm cảm biến</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="/manager/alerts" class="nav-link">
+                        <i class="nav-icon bi bi-bell-fill text-danger"></i>
+                        <p>Cảnh báo</p>
+                    </a>
+                </li>
+
+                <!-- LỊCH SỬ & DỮ LIỆU -->
+                <!-- <li class="nav-header text-uppercase text-muted fw-semibold fs-6 mb-1">
+                            <i class="bi bi-clock-history me-1"></i> Lịch sử & Dữ liệu
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="/history" class="nav-link">
+                                <i class="nav-icon bi bi-journal-text text-secondary"></i>
+                                <p>Lịch sử hoạt động</p>
+                            </a>
+                        </li> -->
+
+                <li class="nav-item">
+                    <a href="/analytics" class="nav-link">
+                        <i class="nav-icon bi bi-graph-up text-warning"></i>
+                        <p>Phân tích dữ liệu</p>
+                    </a>
+                </li>
+
+                <!-- HỆ THỐNG -->
+                <li class="nav-header text-uppercase text-muted fw-semibold fs-6 mb-1">
+                    <i class="bi bi-gear-fill me-1"></i> Hệ thống
+                </li>
+
+                <li class="nav-item">
+                    <a href="/settings" class="nav-link">
+                        <i class="nav-icon bi bi-sliders text-info"></i>
+                        <p>Cài đặt</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="/help" class="nav-link">
+                        <i class="nav-icon bi bi-question-circle-fill text-warning"></i>
+                        <p>Hướng dẫn</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <!-- End Sidebar Wrapper -->
+</aside>
+<!--end::Sidebar-->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Lấy đường dẫn hiện tại
+        const currentPath = window.location.pathname;
+
+        // Lấy tất cả link trong sidebar
+        const links = document.querySelectorAll('.app-sidebar .nav-link');
+
+        // if (currentPath == "/analytics") {
+        //     links[0].classList.add('active');
+        //     return;
+        // }
+
+        links.forEach(link => {
+            // So sánh href với pathname
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    });
+</script>

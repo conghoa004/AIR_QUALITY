@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  app_air_quality:
+    build: .
+    container_name: app_air_quality
+    env_file:
+      - .env-docker
+    networks:
+      - bigdata-network
+    ports:
+      - "4001:4001"
+    restart: unless-stopped
+
+networks:
+  bigdata-network:
+    external: true

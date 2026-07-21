@@ -1,0 +1,265 @@
+/* Light clean background */
+.account-manager-page {
+  min-height: 100%;
+  padding: 0px 12px;
+}
+
+.am-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+.am-toolbar {
+  padding: 16px 0px;
+}
+
+/* Keep DataTable spacing */
+table.dataTable {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 12px !important;
+}
+
+table.dataTable thead th {
+  background: #f8fafc;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+  font-weight: 700;
+}
+
+table.dataTable tbody tr {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  transition: box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+table.dataTable tbody tr:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+table.dataTable tbody td {
+  color: #111827;
+  padding: 14px 18px;
+}
+
+/* Remove focus/selection borders on rows and controls inside table */
+.account-manager-page table.dataTable tbody tr:focus,
+.account-manager-page table.dataTable tbody tr:focus-within,
+.account-manager-page table.dataTable tbody td:focus {
+  outline: none !important;
+  box-shadow: none;
+}
+
+.account-manager-page #example button:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Search input pill with stable blue border */
+.am-search .am-pill {
+  border: 1px solid var(--bs-primary);
+  border-radius: 50rem;
+  overflow: hidden;
+}
+
+.am-search .am-pill:focus-within {
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.15);
+  border-color: var(--bs-primary);
+}
+
+.am-search .input-group-text {
+  background: #ffffff;
+  border: 0;
+}
+
+.am-search .form-control {
+  border: 0;
+  box-shadow: none;
+}
+
+.am-search .form-control:focus {
+  border: 0;
+  box-shadow: none;
+}
+
+/* Modern minimal modal using Bootstrap */
+.account-manager-page .modal-content {
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.1);
+}
+
+.account-manager-page .modal-header {
+  border: 0;
+  padding-bottom: 0.25rem;
+}
+
+.account-manager-page .modal-footer {
+  border: 0;
+  padding-top: 0.25rem;
+}
+
+.account-manager-page .modal-title {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* User cell (avatar + name + email) */
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+}
+
+.user-meta .user-name {
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.user-meta .user-email {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+/* Subtle blur for modal backdrop */
+.modal-backdrop.show {
+  backdrop-filter: blur(2px);
+}
+
+/* Subtle blur + entrance animation for modal */
+.modal-backdrop.show {
+  backdrop-filter: blur(2px);
+}
+
+.account-manager-page .modal.fade .modal-dialog {
+  transform: translateY(8px);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.account-manager-page .modal.show .modal-dialog {
+  transform: translateY(0);
+}
+
+/* Prevent layout shift when showing validation errors in modal */
+.account-manager-page .form-floating {
+  position: relative;
+  margin-bottom: 1.75rem;
+}
+
+.account-manager-page .form-floating .invalid-feedback {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+}
+
+/* Keep controls tidy when invalid */
+.account-manager-page .form-control.is-invalid,
+.account-manager-page .form-select.is-invalid {
+  background-image: none;
+  /* remove default bg icon to keep clean */
+}
+
+
+/* Suppress blue focus outline for DataTables length select (scoped) */
+.account-manager-page .dataTables_wrapper .dataTables_length select:focus,
+.account-manager-page .dataTables_wrapper .form-select:focus {
+  box-shadow: none !important;
+  outline: none !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Modern Toast Styling */
+.swal2-toast-custom {
+  border-radius: 10px !important;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  padding: 14px 18px !important;
+  min-width: 320px !important;
+  max-width: 400px !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.swal2-toast-title {
+  font-weight: 700 !important;
+  font-size: 15px !important;
+  margin-bottom: 4px !important;
+  line-height: 1.3 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.swal2-toast-content {
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  opacity: 0.9 !important;
+  margin: 0 !important;
+  font-weight: 500 !important;
+}
+
+/* Success Toast */
+.swal2-toast-custom.swal2-success {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  border-left: 4px solid #22c55e !important;
+  color: #166534 !important;
+}
+
+/* Warning Toast */
+.swal2-toast-custom.swal2-warning {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+  border-left: 4px solid #f59e0b !important;
+  color: #92400e !important;
+}
+
+/* Icon styling */
+.swal2-toast-custom .swal2-icon {
+  width: 18px !important;
+  height: 18px !important;
+  margin: 0 !important;
+}
+
+/* Progress bar */
+.swal2-toast-custom .swal2-timer-progress-bar {
+  background: linear-gradient(90deg, #22c55e, #16a34a) !important;
+  height: 3px !important;
+  border-radius: 2px !important;
+  opacity: 0.9 !important;
+}
+
+/* Container positioning */
+.swal2-container.swal2-top-end {
+  padding: 24px 24px 0 0 !important;
+}
+
+/* Multiple toasts spacing */
+.swal2-toast-custom + .swal2-toast-custom {
+  margin-top: 12px !important;
+}
+
+/* Hover effect */
+.swal2-toast-custom:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.2s ease !important;
+}

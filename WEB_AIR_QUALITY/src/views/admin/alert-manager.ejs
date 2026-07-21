@@ -1,0 +1,94 @@
+<link rel="stylesheet" href="/css/admin/alert-manager.css">
+
+<div class="alert-manager-page container-fluid">
+    <div class="am-card p-2 p-sm-3">
+        <!-- Toolbar -->
+        <div class="am-toolbar pb-2">
+            <div class="row w-100 g-3 align-items-center">
+                <div class="col-12 col-sm-7 col-md-6">
+                    <div class="am-search flex-grow-1">
+                        <div class="input-group input-group-sm am-pill p-1">
+                            <span class="input-group-text ps-3">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" id="alertSearch" class="form-control pe-3"
+                                placeholder="Tìm kiếm nhanh trong bảng..." />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="am-table-wrap mt-2">
+            <div class="table-responsive">
+                <table id="alertTable" class="table table-striped align-middle mb-0" style="width:100%">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Tiêu đề</th>
+                            <th>Nội dung</th>
+                            <th>Thời gian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% alerts.forEach(alert=> { %>
+                            <tr>
+                                <td>
+                                    <%= alert._id %>
+                                </td>
+                                <td>
+                                    <%= alert.title %>
+                                </td>
+                                <td>
+                                    <%= alert.message %>
+                                </td>
+                                <td>
+                                    <%= new Date(alert.createdAt).toLocaleString("vi-VN") %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables CSS & JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<!-- JS xử lý -->
+<script>
+    $(document).ready(function () {
+        const table = $('#alertTable').DataTable({
+            dom: 'lrtip',  // bỏ search box mặc định
+            order: [[2, 'desc']], // sắp xếp theo thời gian giảm dần
+            columnDefs: [
+                { targets: -1, orderable: true } // cột thời gian có thể sắp xếp
+            ],
+            language: {
+                search: "Tìm kiếm:",
+                lengthMenu: "Hiển thị _MENU_ dòng",
+                info: "Hiển thị _START_ đến _END_ của _TOTAL_ dòng",
+                paginate: { first: "Đầu", last: "Cuối", next: "Sau", previous: "Trước" },
+                zeroRecords: "Không tìm thấy thông báo",
+                infoEmpty: "Không có dữ liệu",
+                infoFiltered: "(lọc từ _MAX_ dòng)"
+            }
+        });
+
+        // Kết nối input tìm kiếm tùy chỉnh
+        $('#alertSearch').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+    }); 
+</script>

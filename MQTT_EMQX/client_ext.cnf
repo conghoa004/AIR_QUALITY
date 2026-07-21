@@ -1,0 +1,4 @@
+[ crl_ext ]
+authorityKeyIdentifier=keyid:always
+issuerAltName=issuer:copy
+crlDistributionPoints=URI:http://host.docker.internal:3000/api/crl

@@ -1,0 +1,9 @@
+flask
+numpy
+pandas
+tensorflow
+joblib
+scikit-learn
+clickhouse-connect
+python-dotenv
+flask-cors

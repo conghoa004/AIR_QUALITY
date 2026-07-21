@@ -1,0 +1,215 @@
+<link rel="stylesheet" href="/css/admin/user-manager.css">
+
+<div class="account-manager-page container-fluid">
+    <div class="am-card p-2 p-sm-3">
+        <div class="am-toolbar pb-2">
+            <div class="row w-100 g-3 align-items-center">
+                <div class="col-12 col-sm-7 col-md-6">
+                    <div class="am-search flex-grow-1">
+                        <div class="input-group input-group-sm am-pill p-1">
+                            <span class="input-group-text ps-3">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" id="tableSearch" class="form-control pe-3"
+                                placeholder="Tìm nhanh trong bảng...">
+                        </div>
+                    </div>
+                </div>
+                <% if (session.user.email=="conghoa247@gmail.com" ) { %>
+                    <div class="col-12 col-sm-5 col-md-6 text-sm-end">
+                        <a href="#" id="addUserBtn"
+                            class="btn btn-primary rounded-pill d-inline-flex align-items-center gap-2 px-3 py-2 shadow">
+                            <i class="bi bi-person-plus-fill"></i>
+                            <span>Thêm tài khoản</span>
+                        </a>
+                    </div>
+                    <% } %>
+            </div>
+        </div>
+        <div class="am-table-wrap mt-2">
+            <div class="table-responsive">
+                <table id="example" class="table table-striped align-middle mb-0" style="width:100%">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Người dùng</th>
+                            <th>Vai trò</th>
+                            <th>Trạng thái</th>
+                            <th class="d-none d-md-table-cell">Created at</th>
+                            <th class="d-none d-md-table-cell">Updated at</th>
+                            <th class="text-nowrap">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% users.forEach(user=> { %>
+                            <tr>
+                                <td>
+                                    <%= user._id %>
+                                </td>
+                                <td>
+                                    <div class="user-cell">
+                                        <img src="<%= user.avatar || '/img/icon/user.png' %>" alt="avatar"
+                                            class="user-avatar">
+                                        <div class="user-meta">
+                                            <div class="user-name">
+                                                <%= user.name %>
+                                            </div>
+                                            <div class="user-email">
+                                                <%= user.email %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge <%= user.role === 'Admin' ? 'bg-primary-subtle text-primary' : 'bg-secondary-subtle text-secondary' %>">
+                                        <%= user.role %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span
+                                        class="badge <%= user.status === 'Active' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' %>">
+                                        <%= user.status %>
+                                    </span>
+                                </td>
+                                <td class="d-none d-md-table-cell">
+                                    <%= user.createdAt.toLocaleString('vi-VN') %>
+                                </td>
+                                <td class="d-none d-md-table-cell">
+                                    <%= user.updatedAt.toLocaleString('vi-VN') %>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
+                                            title="Sửa" data-action="edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+
+                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip"
+                                            title="Xóa" data-action="delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-warning" data-bs-toggle="tooltip"
+                                            title="<%= user.status === 'Active' ? 'Khóa' : 'Mở khóa' %>"
+                                            data-action="block">
+                                            <i
+                                                class="bi <%= user.status === 'Active' ? 'bi-shield-lock' : 'bi-unlock' %>"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="my-2"></div>
+</div>
+
+<!-- Modal Thêm/Sửa Tài khoản (giữ nguyên) -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4 shadow-lg border-0">
+            <div class="modal-header bg-primary bg-gradient text-white rounded-top-4 border-0 pb-2">
+                <div class="d-flex align-items-center gap-2">
+                    <span
+                        class="d-inline-flex align-items-center justify-content-center bg-white bg-opacity-25 rounded-circle"
+                        style="width:36px;height:36px;">
+                        <i class="bi bi-person-plus"></i>
+                    </span>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="userModalLabel">Thêm tài khoản</h5>
+                        <small class="text-white-50">Nhập thông tin người dùng và vai trò</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pt-3">
+                <form id="userForm" class="needs-validation" novalidate enctype="multipart/form-data">
+                    <div class="row g-4">
+                        <!-- Avatar uploader -->
+                        <div class="col-12">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="position-relative">
+                                    <img id="avatarPreview" src="/img/icon/user.png" class="rounded-circle border"
+                                        alt="avatar" style="width:80px;height:80px;object-fit:cover;">
+                                    <label for="userAvatar"
+                                        class="btn btn-sm btn-primary rounded-circle position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center"
+                                        style="width:28px;height:28px;" title="Tải ảnh">
+                                        <i class="bi bi-camera-fill"></i>
+                                    </label>
+                                </div>
+                                <div>
+                                    <div class="small text-muted mb-1">Ảnh đại diện</div>
+                                    <input type="file" id="userAvatar" name="avatar" accept="image/*" class="d-none">
+                                    <div class="text-muted small">PNG/JPG ≤ 2MB, khuyến nghị 256×256</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="userName" name="name" placeholder="Họ tên"
+                                    required>
+                                <label for="userName">Họ tên</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="userEmail" name="email" placeholder="Email"
+                                    required>
+                                <label for="userEmail">Email</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select class="form-select" name="role" id="userRole" required disabled>
+                                    <option value="User">User</option>
+                                    <option selected value="Admin">Admin</option>
+                                </select>
+                                <label for="userRole">Vai trò</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select class="form-select" name="status" id="userStatus" required>
+                                    <option selected value="Active">Active</option>
+                                    <option value="Blocked">Blocked</option>
+                                </select>
+                                <label for="userStatus">Trạng thái</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer bg-light rounded-bottom-4 border-0 pt-2">
+                <button type="button" class="btn btn-outline-secondary rounded-pill"
+                    data-bs-dismiss="modal">Hủy</button>
+                <button type="button" id="saveUserBtn" class="btn btn-primary rounded-pill"><i
+                        class="bi bi-save me-1"></i>Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery (bắt buộc cho DataTables) -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables CSS & JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<!-- SweetAlert2 -->
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+
+<!-- Animate.css for smooth animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+<!-- Khởi tạo DataTables & handlers -->
+<script src="/js/admin/user
+-manager.js"></script>

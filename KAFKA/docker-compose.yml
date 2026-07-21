@@ -1,0 +1,110 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - bigdata-network
+
+  kafka1:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,INTERNAL://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,INTERNAL://kafka1:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true" # Bật tự động tạo topic (chỉ để test)
+    networks:
+      - bigdata-network
+    restart: unless-stopped
+
+  kafka2:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka2
+    depends_on:
+      - zookeeper
+    ports:
+      - "9093:9092"
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,INTERNAL://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9093,INTERNAL://kafka2:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false" # Bật tự động tạo topic (chỉ để test)
+    networks:
+      - bigdata-network
+    restart: unless-stopped
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: "local"
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka1:29092,kafka2:29092"
+      KAFKA_CLUSTERS_0_ZOOKEEPER: "zookeeper:2181"
+    depends_on:
+      - kafka1
+      - kafka2
+    networks:
+      - bigdata-network
+  
+  # producer:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile-producer
+  #   container_name: producer
+  #   depends_on:
+  #     - kafka1
+  #     - kafka2
+  #   volumes:
+  #     - ./producer.py:/app/producer.py
+  #     - ./emqxsl-ca.crt:/app/emqxsl-ca.crt
+  #   restart: always
+  #   environment:
+  #     KAFKA_SERVERS: kafka1:29092,kafka2:29092
+  #     MQTT_BROKER: h6c69fc6.ala.asia-southeast1.emqxsl.com
+  #     MQTT_PORT: 8883
+  #     MQTT_TOPIC: node/# # Nhận tất cả topic 
+  #     MQTT_USERNAME: hoaze
+  #     MQTT_PASSWORD: 'Hoa1234#'
+  #     CA_CERT_PATH: /app/emqxsl-ca.crt
+  #     KAFKA_TOPIC: air_quality
+  #   networks:
+  #     - bigdata-network
+
+  consumer:
+    build:
+      context: ./tracking_consumer  # context là thư mục tracking_consumer
+      dockerfile: Dockerfile
+    container_name: kafka_consumer
+    depends_on:
+      - kafka1
+      - kafka2
+    env_file:
+      - ./tracking_consumer/.env-docker
+    restart: unless-stopped
+    networks:
+      - bigdata-network
+
+networks:
+  bigdata-network:
+    external: true

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điều khoản & Bảo mật | Air Quality Official</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.95);
+            --brand-blue-header: #003366;
+            
+            /* Màu Logo chính xác từ ảnh */
+            --logo-bg: #006CBE;      /* Nền xanh của ảnh */
+            --logo-air: #00D7FF;     /* Màu chữ Air */
+            --logo-quality: #FFB900; /* Màu chữ Quality */
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-light);
+            line-height: 1.8;
+            scroll-behavior: smooth;
+        }
+
+        /* --- Custom Logo System (Đã sửa giống ảnh) --- */
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            text-decoration: none !important;
+        }
+
+        /* Khung bao logo để tạo nền xanh giống ảnh */
+        .logo-container {
+            background-color: var(--logo-bg);
+            padding: 8px 16px;
+            border-radius: 8px; /* Bo góc nhẹ */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .brand-wrapper:hover .logo-container {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 108, 190, 0.4);
+        }
+
+        .brand-logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem; /* Kích thước chữ lớn */
+            display: flex;
+            align-items: baseline;
+            line-height: 1;
+            letter-spacing: -0.5px; /* Thu hẹp khoảng cách chữ giống ảnh */
+        }
+
+        .logo-air { 
+            color: var(--logo-air); 
+            font-weight: 700; /* Đậm vừa */
+        }
+        
+        .logo-quality { 
+            color: var(--logo-quality); 
+            font-weight: 800; /* Rất đậm */
+            margin-left: 0px; /* Sát vào chữ Air */
+        }
+
+        /* --- Navigation --- */
+        .navbar-custom {
+            background: var(--logo-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 0.8rem 0;
+        }
+
+        /* --- Header Section --- */
+        .page-hero {
+            background: linear-gradient(135deg, var(--brand-blue-header) 0%, #0056b3 100%);
+            padding: 10rem 0 8rem;
+            color: white;
+            text-align: center;
+            clip-path: ellipse(150% 100% at 50% 0%);
+        }
+
+        /* --- Content Layout --- */
+        .content-card {
+            background: white;
+            border-radius: 30px;
+            padding: 4rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            margin-top: -6rem;
+            margin-bottom: 5rem;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .sticky-toc {
+            position: sticky;
+            top: 100px;
+            border-left: 2px solid #e2e8f0;
+            padding-left: 1.5rem;
+            margin-left: 1rem;
+        }
+
+        .toc-item {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+
+        .toc-item.active {
+            color: var(--brand-blue-header);
+            font-weight: 700;
+            padding-left: 5px;
+        }
+
+        /* --- Typography --- */
+        h2 {
+            font-weight: 700;
+            color: var(--brand-blue-header);
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            scroll-margin-top: 110px;
+        }
+
+        .highlight-box {
+            background: rgba(0, 210, 255, 0.05);
+            border-left: 5px solid var(--logo-air);
+            padding: 2rem;
+            border-radius: 0 15px 15px 0;
+            margin: 2rem 0;
+        }
+
+        .footer-premium {
+            background: #f1f5f9;
+            padding: 4rem 0 2rem;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 768px) {
+            .content-card { padding: 2rem; margin-top: -4rem; }
+            .brand-logo-text { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-custom fixed-top">
+        <div class="container">
+            <a class="brand-wrapper">
+                <div class="logo-container">
+                    <div class="brand-logo-text">
+                        <span class="logo-air">Air</span>
+                        <span class="logo-quality">Quality</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <header class="page-hero">
+        <div class="container" data-aos="fade-down">
+            <h1 class="display-4 fw-bold mb-3">Điều khoản & Bảo mật</h1>
+            <p class="lead opacity-75">Cam kết bảo vệ sức khỏe và dữ liệu của cộng đồng Việt Nam</p>
+            <div class="mt-4 badge bg-light text-dark px-3 py-2 rounded-pill">
+                Phiên bản 2.0.1 • Cập nhật: 27/12/2025
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8" data-aos="fade-up">
+                <div class="content-card">
+                    
+                    <section id="intro">
+                        <h2>1. Sứ mệnh của Air Quality</h2>
+                        <p>Air Quality không chỉ là một ứng dụng; chúng tôi là nền tảng dữ liệu mở nhằm nâng cao nhận thức về môi trường. Bằng cách sử dụng dịch vụ, bạn đang góp phần vào mạng lưới giám sát không khí lớn nhất khu vực.</p>
+                    </section>
+
+                    <section id="data">
+                        <h2>2. Chính sách Dữ liệu & Riêng tư</h2>
+                        <p>Chúng tôi hiểu rằng sự riêng tư là tài sản quý giá nhất của bạn. Hệ thống được thiết kế theo chuẩn <strong>Privacy by Design</strong>:</p>
+                        <div class="highlight-box">
+                            <h5 class="fw-bold text-dark"><i class="fas fa-shield-halved me-2"></i> Quyền riêng tư của bạn là ưu tiên</h5>
+                            Dữ liệu vị trí (GPS) của bạn chỉ được sử dụng để tính toán trạm đo gần nhất trong bán kính 5km. Chúng tôi không bao giờ chia sẻ dữ liệu này cho bên thứ ba hoặc sử dụng cho mục đích quảng cáo.
+                        </div>
+                    </section>
+
+                    <section id="sources">
+                        <h2>3. Độ tin cậy của Dữ liệu</h2>
+                        <p>Dữ liệu được cập nhật mỗi 5 phút từ các nguồn uy tín:</p>
+                        <ul class="list-unstyled">
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="fas fa-check-circle text-success mt-1 me-3"></i>
+                                <span><strong>Cơ quan chức năng:</strong> Hệ thống trạm quan trắc của Tổng cục Môi trường Việt Nam.</span>
+                            </li>
+                            <li class="mb-3 d-flex align-items-start">
+                                <i class="fas fa-check-circle text-success mt-1 me-3"></i>
+                                <span><strong>Hợp tác quốc tế:</strong> Các cảm biến đối chiếu đạt chuẩn ISO từ đối tác công nghệ.</span>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section id="responsibility">
+                        <h2>4. Quyền hạn và Trách nhiệm</h2>
+                        <p>Người dùng có quyền truy cập miễn phí toàn bộ các chỉ số AQI, bụi mịn PM2.5 và PM10. Tuy nhiên, mọi hành vi cố tình làm giả dữ liệu hoặc tấn công API sẽ bị xử lý theo pháp luật Việt Nam.</p>
+                    </section>
+
+                    <section id="contact">
+                        <h2>5. Liên hệ với chúng tôi</h2>
+                        <p>Nếu có thắc mắc về kỹ thuật hoặc yêu cầu xóa dữ liệu, vui lòng liên hệ đội ngũ kỹ sư tại:</p>
+                        <div class="card bg-light border-0 p-3 mt-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-envelope-open-text me-3 text-primary"></i>
+                                <span>Email: <strong>legal@airquality.vn</strong></span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-map-pin me-3 text-danger"></i>
+                                <span>Văn phòng: Khu Công nghệ cao, TP. Thủ Đức, TP. HCM</span>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+
+            <div class="col-lg-4 d-none d-lg-block" data-aos="fade-left" data-aos-delay="200">
+                <div class="sticky-toc">
+                    <h6 class="text-uppercase fw-bold mb-4" style="letter-spacing: 2px;">Trong trang này</h6>
+                    <a href="#intro" class="toc-item active">1. Sứ mệnh chung</a>
+                    <a href="#data" class="toc-item">2. Chính sách bảo mật</a>
+                    <a href="#sources" class="toc-item">3. Nguồn dữ liệu uy tín</a>
+                    <a href="#responsibility" class="toc-item">4. Trách nhiệm người dùng</a>
+                    <a href="#contact" class="toc-item">5. Hỗ trợ pháp lý</a>
+                    
+                    <hr class="my-4 shadow-sm">
+                    
+                    <div class="p-4 rounded-4" style="background: var(--brand-blue-header); color: white;">
+                        <small class="opacity-75 d-block mb-2">Tải ứng dụng Mobile</small>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-sm btn-outline-light rounded-pill"><i class="fab fa-apple me-2"></i> App Store</button>
+                            <button class="btn btn-sm btn-outline-light rounded-pill"><i class="fab fa-google-play me-2"></i> Google Play</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-premium">
+        <div class="container">
+            <div class="brand-wrapper justify-content-center mb-4">
+                <div class="logo-container">
+                    <div class="brand-logo-text" style="font-size: 1.4rem;">
+                        <span class="logo-air">Air</span>
+                        <span class="logo-quality">Quality</span>
+                    </div>
+                </div>
+            </div>
+            <p class="text-muted mb-0">&copy; 2025 Air Quality Project. Tất cả quyền được bảo lưu.</p>
+            <p class="small text-muted mt-2">Phát triển bởi đội ngũ kỹ sư môi trường vì một Việt Nam xanh hơn.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navItems = document.querySelectorAll('.toc-item');
+            let current = "";
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 120) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').includes(current)) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

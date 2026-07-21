@@ -1,0 +1,661 @@
+<!-- Custom CSS -->
+<link rel="stylesheet" href="/css/admin/analytics.css">
+<link rel="stylesheet" href="/css/admin/user-manager.css">
+
+<!--begin::App Content-->
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <!-- Weather hiện tại -->
+            <div class="col-12 col-lg-6 mb-3 mb-lg-0">
+                <div class="card shadow-sm h-100 rounded-4" id="weather-card"
+                    style="background: linear-gradient(135deg, #0D6EFD, #5a9cff); color: #fff;">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <img id="weather-icon" src="" alt="Weather" class="img-fluid" style="width:80px; height:80px;">
+                        <div>
+                            <h2 id="weather-temp" class="fw-bold mb-1" style="font-size:2rem;">--°C</h2>
+                            <p id="weather-desc" class="mb-1">Đang tải...</p>
+                            <p class="mb-0 small">
+                                <i class="bi bi-droplet-fill"></i> <span id="weather-humidity">--%</span>
+                                &nbsp;&nbsp;
+                                <i class="bi bi-wind"></i> <span id="weather-wind">-- m/s</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forecast 5 ngày -->
+            <div class="col-12 col-lg-6">
+                <div class="d-flex gap-2 flex-wrap" id="forecast"></div>
+            </div>
+        </div>
+
+        <!-- Thông tín trạm -->
+        <div class="card shadow-sm h-100 rounded-4 mb-3">
+            <!-- Header -->
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <!-- Tiêu đề -->
+                    <div class="col-lg-6 col-md-12 mb-2 mb-lg-0">
+                        <h5 class="card-title mb-0 fw-bold" style="color: #1e69b5;">
+                            <i class="bi bi-broadcast-pin me-2"></i> Thông tin trạm quan trắc
+                        </h5>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="card-body">
+                <div class="row g-3 text-center">
+
+                    <!-- Tên trạm -->
+                    <div class="col-12 col-md-6 col-xl-3">
+                        <div class="card h-100 border-0 shadow-sm text-white bg-primary rounded-4">
+                            <div class="card-body py-3">
+                                <i class="bi bi-building-check fs-2 mb-2 d-block"></i>
+                                <h6 class="fw-bold mb-1" id="nameNode">Trạm Số 46 - Lưu Quang Vũ</h6>
+                                <small>Tên trạm quan trắc tự động</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vị trí -->
+                    <div class="col-12 col-md-6 col-xl-3">
+                        <div class="card h-100 border-0 shadow-sm text-white bg-success rounded-4">
+                            <div class="card-body py-3">
+                                <i class="bi bi-geo-alt fs-2 mb-2 d-block"></i>
+                                <h6 class="fw-bold mb-1" id="nodeLocation">Hà Nội, Việt Nam </h6>
+                                <small>Khu vực giám sát không khí</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tọa độ -->
+                    <div class="col-12 col-md-6 col-xl-3">
+                        <div class="card h-100 border-0 shadow-sm text-white bg-info rounded-4">
+                            <div class="card-body py-3">
+                                <i class="bi bi-geo-fill fs-2 mb-2 d-block"></i>
+                                <h6 class="fw-bold mb-1" id="location_lat_long">21.0358 / 105.8342</h6>
+                                <small id="location_lat_long">Vĩ độ / Kinh độ</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cập nhật lần cuối -->
+                    <div class="col-12 col-md-6 col-xl-3">
+                        <div class="card h-100 border-0 shadow-sm text-dark bg-warning rounded-4">
+                            <div class="card-body py-3">
+                                <i class="bi bi-clock-fill fs-2 mb-2 d-block"></i>
+                                <h6 class="fw-bold mb-1" id="last_update">19/10/2025 - 19:45</h6>
+                                <small>Thời gian cập nhật gần nhất</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter dữ liệu: chọn trạm + khoảng thời gian -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="filter-bar">
+                    <div class="d-flex flex-wrap align-items-end gap-3 p-3">
+                        <!-- Chọn trạm -->
+                        <div class="filter-group" style="min-width: 180px;">
+                            <button
+                                class="btn btn-outline-primary rounded-pill w-100 dropdown-toggle shadow-sm text-truncate px-3 py-2"
+                                type="button" id="stationDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                data-bs-toggle="tooltip" title="Chọn trạm đo lường">
+                                <% if (Array.isArray(sensorList) && sensorList.length> 0) { %>
+                                    <i class="bi bi-geo-alt-fill me-2"></i>
+                                    <%= sensorList[0].area %> - <%= sensorList[0].sensor_id %>
+                                            <% } else { %>
+                                                <i class="bi bi-geo-alt-fill me-2"></i> Không có Node
+                                                <% } %>
+                            </button>
+
+                            <ul class="dropdown-menu shadow-sm rounded-3" aria-labelledby="stationDropdown">
+                                <% if (Array.isArray(sensorList) && sensorList.length> 0) { %>
+                                    <% sensorList.forEach(element=> { %>
+                                        <li>
+                                            <a class="dropdown-item station-option" href="#"
+                                                data-value="<%= element.sensor_id %>">
+                                                <i class="bi bi-building"></i>
+                                                <%= element.area %> - <%= element.sensor_id %>
+                                            </a>
+                                        </li>
+                                        <% }); %>
+                                            <% } else { %>
+                                                <li><span class="dropdown-item text-muted">Không có Node nào</span></li>
+                                                <% } %>
+                            </ul>
+                        </div>
+
+                        <!-- Khoảng thời gian -->
+                        <div class="filter-group" style="min-width: 200px;">
+                            <button
+                                class="btn btn-outline-primary rounded-pill w-100 dropdown-toggle shadow-sm text-truncate px-3 py-2"
+                                type="button" id="timeRangeDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                data-bs-toggle="tooltip" title="Chọn khoảng thời gian dữ liệu">
+                                <i class="bi bi-clock-history me-2"></i>7 ngày
+                            </button>
+                            <ul class="dropdown-menu shadow-sm rounded-3 p-2" aria-labelledby="timeRangeDropdown"
+                                style="min-width: 250px;">
+                                <li><a class="dropdown-item time-range rounded-2" href="#" data-range="7"><i
+                                            class="bi bi-calendar-week"></i> 7 ngày</a></li>
+                                <li><a class="dropdown-item time-range rounded-2" href="#" data-range="30"><i
+                                            class="bi bi-calendar-month"></i> 30 ngày</a></li>
+                                <li><a class="dropdown-item time-range rounded-2" href="#" data-range="90"><i
+                                            class="bi bi-calendar3"></i> 90 ngày</a></li>
+                                <li><a class="dropdown-item time-range rounded-2" href="#" data-range="365"><i
+                                            class="bi bi-calendar-check"></i> 365 ngày</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li class="p-2">
+                                    <div class="d-flex flex-column gap-2">
+                                        <label class="form-label fw-semibold small mb-1 text-primary">Tùy chỉnh:</label>
+                                        <input type="date" id="startDateCustom"
+                                            class="form-control form-control-sm rounded-2 border-primary"
+                                            placeholder="Từ ngày">
+                                        <input type="date" id="endDateCustom"
+                                            class="form-control form-control-sm rounded-2 border-primary"
+                                            placeholder="Đến ngày">
+                                        <button id="applyCustomRange"
+                                            class="btn btn-sm btn-outline-primary rounded-pill mt-1">
+                                            <i class="fas fa-check me-1"></i>Áp dụng
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Nút áp dụng -->
+                        <div class="filter-group">
+                            <button id="applyFilterBtn"
+                                class="btn btn-primary rounded-pill shadow-sm px-4 py-2 transition-all">
+                                <i class="fas fa-funnel me-1"></i>Lọc dữ liệu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ AQI -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="card shadow-sm h-100 rounded-4">
+                    <div class="card-header ">
+                        <div class="row align-items-center">
+                            <!-- Tiêu đề -->
+                            <div class="col-lg-6 col-md-12 mb-2 mb-lg-0">
+                                <h5 class="card-title mb-0 chart-title fw-bold" style="color: #1e69b5;">Biểu đồ AQI theo
+                                    thời gian</h5>
+                            </div>
+
+                            <!-- Control (Công tắc + Filter) -->
+                            <div class="col-lg-6 col-md-12">
+                                <div class="d-flex flex-wrap justify-content-lg-end align-items-center gap-2">
+                                    <!-- Công tắc hiển thị biểu đồ -->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="small">Hiển thị biểu đồ</span>
+                                        <div class="form-check form-switch m-0">
+                                            <input class="form-check-input" type="checkbox" role="switch"
+                                                id="toggleChartSwitch" checked>
+                                        </div>
+                                    </div>
+
+                                    <!-- Filter AQI Tổng -->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <label for="aqiFilter" class="small mb-0">Lọc AQI:</label>
+                                        <select id="aqiFilter" class="form-select form-select-sm w-auto">
+                                            <option value="all" selected>Tất cả</option>
+                                            <option value="0-50">0 – 50 (Tốt)</option>
+                                            <option value="51-100">51 – 100 (Trung bình)</option>
+                                            <option value="101-150">101 – 150 (Kém)</option>
+                                            <option value="151-200">151 – 200 (Xấu)</option>
+                                            <option value="201-300">201 – 300 (Rất xấu)</option>
+                                            <option value="301-500">301 – 500 (Nguy hại)</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Tải biểu đồ -->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button id="downloadChartBtn"
+                                            class="btn btn-sm btn-outline-success rounded-pill">
+                                            <i class="bi bi-download me-1"></i>Tải dữ liệu
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body" id="lineChartCardBody">
+                        <!-- Thông số chất lượng không khí -->
+                        <div class="row g-3 mb-4 text-center">
+                            <!-- CO -->
+                            <div class="col-6 col-md-4 col-lg-2">
+                                <div class="card shadow-sm border-0 rounded-4 h-100"
+                                    style="background: linear-gradient(135deg,#ff7e5f,#feb47b); color:white;">
+                                    <div class="card-body py-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"
+                                            fill="currentColor" class="mb-2" viewBox="0 0 24 24">
+                                            <path
+                                                d="M9 2a7 7 0 100 14 7 7 0 000-14zm0 12a5 5 0 110-10 5 5 0 010 10zm10.5-1.5a3.5 3.5 0 11-3.45-3.95A5.96 5.96 0 0019 2a6 6 0 11-5.66 4.05A3.5 3.5 0 0119.5 12.5z" />
+                                        </svg>
+                                        <h4 class="fw-bold mb-0" id="co">2069.1</h4>
+                                        <small>CO (µg/m³)</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- NO₂ -->
+                            <div class="col-6 col-md-4 col-lg-2">
+                                <div class="card shadow-sm border-0 rounded-4 h-100"
+                                    style="background: linear-gradient(135deg,#667eea,#764ba2); color:white;">
+                                    <div class="card-body py-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"
+                                            fill="currentColor" class="mb-2" viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7 9h2v6H7V9zm8 0h2v6h-2V9z" />
+                                        </svg>
+                                        <h4 class="fw-bold mb-0" id="no2">157.81</h4>
+                                        <small>NO₂ (µg/m³)</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SO2 -->
+                            <div class="col-6 col-md-4 col-lg-2">
+                                <div class="card shadow-sm border-0 rounded-4 h-100"
+                                    style="background: linear-gradient(135deg,#667eea,#764ba2); color:white;">
+                                    <div class="card-body py-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"
+                                            fill="currentColor" class="mb-2" viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7 9h2v6H7V9zm8 0h2v6h-2V9z" />
+                                        </svg>
+                                        <h4 class="fw-bold mb-0" id="so2">157.81</h4>
+                                        <small>SO₂ (µg/m³)</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- O₃ -->
+                            <div class="col-6 col-md-4 col-lg-2">
+                                <div class="card shadow-sm border-0 rounded-4 h-100"
+                                    style="background: linear-gradient(135deg,#43cea2,#185a9d); color:white;">
+                                    <div class="card-body py-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"
+                                            fill="currentColor" class="mb-2" viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 2a10 10 0 100 20 10 10 0 000-20zm3 14H9v-2h6v2zm0-4H9V8h6v4z" />
+                                        </svg>
+                                        <h4 class="fw-bold mb-0" id="o3">-0.45</h4>
+                                        <small>O₃ (µg/m³)</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PM10 -->
+                            <div class="col-6 col-md-4 col-lg-2">
+                                <div class="card shadow-sm border-0 rounded-4 h-100"
+                                    style="background: linear-gradient(135deg,#ff6a00,#ee0979); color:white;">
+                                    <div class="card-body py-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"
+                                            fill="currentColor" class="mb-2" viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 4a8 8 0 100 16 8 8 0 000-16zm0-2a10 10 0 11-10 10A10 10 0 0112 2z" />
+                                        </svg>
+                                        <h4 class="fw-bold mb-0" id="pm10">214.42</h4>
+                                        <small>PM10 (µg/m³)</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PM2.5 -->
+                            <div class="col-6 col-md-4 col-lg-2">
+                                <div class="card shadow-sm border-0 rounded-4 h-100"
+                                    style="background: linear-gradient(135deg,#00c6ff,#0072ff); color:white;">
+                                    <div class="card-body py-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"
+                                            fill="currentColor" class="mb-2" viewBox="0 0 24 24">
+                                            <path d="M12 4a8 8 0 100 16 8 8 0 000-16zm-2 9h4v2h-4v-2zm0-6h4v4h-4V7z" />
+                                        </svg>
+                                        <h4 class="fw-bold mb-0" id="pm25">105.77</h4>
+                                        <small>PM2.5 (µg/m³)</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vùng chứa biểu đồ -->
+                        <div id="lineChartContainer">
+                            <div id="lineChart" style="min-height:350px;"></div>
+                        </div>
+
+                        <!-- Vùng chứa bảng thông tin chi tiết thông số các trạm cảm biến -->
+                        <div class="am-card p-2 p-sm-3">
+                            <div class="am-toolbar pb-2">
+                                <div class="row w-100 g-3 align-items-center">
+                                    <div class="col-12 col-sm-7 col-md-6">
+                                        <div class="am-search flex-grow-1">
+                                            <div class="input-group input-group-sm am-pill p-1">
+                                                <span class="input-group-text ps-3">
+                                                    <i class="bi bi-search"></i>
+                                                </span>
+                                                <input type="text" id="tableSearch" class="form-control pe-3"
+                                                    placeholder="Tìm nhanh trong bảng...">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="am-table-wrap mt-2">
+                                <div class="table-responsive">
+                                    <table id="example" class="table table-striped align-middle mb-0"
+                                        style="width:100%">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Location Name</th>
+                                                <th>AQI CO</th>
+                                                <th>AQI NO₂</th>
+                                                <th>AQI SO₂</th>
+                                                <th>AQI O₃</th>
+                                                <th>AQI PM10</th>
+                                                <th>AQI PM2.5</th>
+                                                <th>AQI Total</th>
+                                                <th>Datetime</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tableAQI">
+                                            <tr>
+                                                <td>1</td>
+                                                <td>Quận 1, TP.HCM</td>
+                                                <td>32</td>
+                                                <td>45</td>
+                                                <td>29</td>
+                                                <td>60</td>
+                                                <td>72</td>
+                                                <td>80</td>
+                                                <td><span class="badge bg-warning text-dark">82</span></td>
+                                                <td>2025-10-24 08:15:00</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Biểu đồ cột Top 10 khu vực ô nhiễm -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="card shadow-sm h-100 rounded-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0 fw-bold" style="color: #1E69B5 !important;">Top 10
+                                            khu vực ô nhiễm
+                                            nhất</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="top10Chart" style="min-height: 350px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vùng chứa biểu đồ dự đoán 24h tiếp theo -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="card shadow-sm h-100 rounded-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0 fw-bold" style="color: #1E69B5 !important;">
+                                            Dự đoán AQI 24h tiếp theo
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="forecastChart" style="min-height: 350px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- So sánh các trạm quan trắc -->
+        <div class="card shadow-lg border-0 rounded-4 p-4 bg-light">
+            <!-- Tiêu đề -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold text-primary mb-0" style="color: #1E69B5 !important;">
+                    <i class="bi bi-diagram-3-fill me-2"></i>So sánh hai trạm quan trắc
+                </h5>
+                <small class="text-muted">
+                    <i class="bi bi-info-circle me-1"></i>Chọn hai trạm để xem thông số chi tiết
+                </small>
+            </div>
+
+            <!-- Bộ chọn trạm -->
+            <div class="row g-3 align-items-center mb-4">
+
+                <!-- Trạm thứ nhất -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="dropdown w-100">
+                        <button
+                            class="btn btn-light border-primary-subtle shadow-sm w-100 d-flex justify-content-between align-items-center rounded-pill px-3 py-2"
+                            type="button" id="dropdownStation1" data-bs-toggle="dropdown">
+                            <span id="station1Text">
+                                <i class="bi bi-geo-alt-fill text-primary"></i> Chọn trạm 1
+                            </span>
+                            <i class="bi bi-caret-down-fill text-muted"></i>
+                        </button>
+
+                        <ul class="dropdown-menu shadow rounded-4 w-100 mt-2">
+                            <% if (Array.isArray(sensorList) && sensorList.length> 0) { %>
+                                <% sensorList.forEach(element=> { %>
+                                    <li>
+                                        <a class="dropdown-item station-option-compare" href="#"
+                                            data-value="<%= element.sensor_id %>" data-name="<%= element.area %>">
+                                            <i class="bi bi-building me-2 text-primary"></i>
+                                            <%= element.area %> - <%= element.sensor_id %>
+                                        </a>
+                                    </li>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <li><span class="dropdown-item text-muted">Không có trạm nào</span></li>
+                                            <% } %>
+                        </ul>
+
+                        <input type="hidden" id="station1" name="station1">
+                    </div>
+                </div>
+
+                <!-- Trạm thứ hai -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="dropdown w-100">
+                        <button
+                            class="btn btn-light border-success-subtle shadow-sm w-100 d-flex justify-content-between align-items-center rounded-pill px-3 py-2"
+                            type="button" id="dropdownStation2" data-bs-toggle="dropdown">
+                            <span id="station2Text">
+                                <i class="bi bi-geo-alt-fill text-success"></i> Chọn trạm 2
+                            </span>
+                            <i class="bi bi-caret-down-fill text-muted"></i>
+                        </button>
+
+                        <ul class="dropdown-menu shadow rounded-4 w-100 mt-2">
+                            <% if (Array.isArray(sensorList) && sensorList.length> 0) { %>
+                                <% sensorList.forEach(element=> { %>
+                                    <li>
+                                        <a class="dropdown-item station-option-compare-2" href="#"
+                                            data-value="<%= element.sensor_id %>" data-name="<%= element.area %>">
+                                            <i class="bi bi-building me-2 text-success"></i>
+                                            <%= element.area %> - <%= element.sensor_id %>
+                                        </a>
+                                    </li>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <li><span class="dropdown-item text-muted">Không có trạm nào</span></li>
+                                            <% } %>
+                        </ul>
+
+                        <input type="hidden" id="station2" name="station2">
+                    </div>
+                </div>
+
+                <!-- Khoảng thời gian -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="dropdown w-100">
+                        <button
+                            class="btn btn-outline-primary rounded-pill w-100 dropdown-toggle shadow-sm text-truncate px-3 py-2 time-range-btn-compare"
+                            id="timeRangeDropdownCompare" data-bs-toggle="dropdown">
+                            <i class="bi bi-clock-history me-2"></i> 7 ngày
+                        </button>
+
+                        <ul class="dropdown-menu shadow rounded-4 p-2 w-100 time-range-menu-compare">
+                            <li>
+                                <a class="dropdown-item time-range-option-compare rounded-2" data-range="7">
+                                    <i class="bi bi-calendar-week"></i> 7 ngày
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item time-range-option-compare rounded-2" data-range="30">
+                                    <i class="bi bi-calendar-month"></i> 30 ngày
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item time-range-option-compare rounded-2" data-range="90">
+                                    <i class="bi bi-calendar3"></i> 90 ngày
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item time-range-option-compare rounded-2" data-range="365">
+                                    <i class="bi bi-calendar-check"></i> 365 ngày
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li class="p-2">
+                                <div class="d-flex flex-column gap-2">
+                                    <label class="form-label fw-semibold small mb-1 text-primary">Tùy chỉnh:</label>
+
+                                    <input type="date" id="startDateCustomCompare"
+                                        class="form-control form-control-sm rounded-2 border-primary time-input-compare">
+
+                                    <input type="date" id="endDateCustomCompare"
+                                        class="form-control form-control-sm rounded-2 border-primary time-input-compare">
+
+                                    <button id="applyCustomRangeCompare"
+                                        class="btn btn-sm btn-outline-primary rounded-pill mt-1">
+                                        <i class="fas fa-check me-1"></i> Áp dụng
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Nút so sánh -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <button class="btn btn-gradient w-100 rounded-pill shadow-sm fw-semibold py-2" id="compareBtn">
+                        <i class="bi bi-bar-chart-line me-2"></i>So sánh ngay
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kết quả so sánh -->
+            <div class="row g-4 text-center">
+                <!-- Trạm 1 -->
+                <div class="col-md-6">
+                    <div
+                        class="card border-0 rounded-4 shadow station-card h-100 bg-gradient-to-right from-primary to-info text-white">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-1" id="name1">Trạm 1</h5>
+                            <small class="opacity-75" id="loc1">---</small>
+                            <hr class="border-light opacity-25">
+                            <div class="text-start ps-4">
+                                <p><i class="bi bi-speedometer2 me-2"></i>AQI tổng: <span id="aqi_total1"
+                                        class="fw-bold">--</span></p>
+                                <p><i class="bi bi-cloud me-2"></i>AQI CO: <span id="aqi_co1">--</span></p>
+                                <p><i class="bi bi-cloud-haze2 me-2"></i>AQI NO₂: <span id="aqi_no21">--</span></p>
+                                <p><i class="bi bi-cloud-drizzle me-2"></i>AQI SO₂: <span id="aqi_so21">--</span></p>
+                                <p><i class="bi bi-wind me-2"></i>PM2.5: <span id="pm251">--</span></p>
+                                <p><i class="bi bi-wind me-2"></i>PM10: <span id="pm101">--</span></p>
+                            </div>
+                            <hr class="border-light opacity-25">
+                            <small class="opacity-75">Cập nhật: <span id="update1">--</span></small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trạm 2 -->
+                <div class="col-md-6">
+                    <div
+                        class="card border-0 rounded-4 shadow station-card h-100 bg-gradient-to-right from-success to-teal text-white">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-1" id="name2">Trạm 2</h5>
+                            <small class="opacity-75" id="loc2">---</small>
+                            <hr class="border-light opacity-25">
+                            <div class="text-start ps-4">
+                                <p><i class="bi bi-speedometer2 me-2"></i>AQI tổng: <span id="aqi_total2"
+                                        class="fw-bold">--</span></p>
+                                <p><i class="bi bi-cloud me-2"></i>AQI CO: <span id="aqi_co2">--</span></p>
+                                <p><i class="bi bi-cloud-haze2 me-2"></i>AQI NO₂: <span id="aqi_no22">--</span></p>
+                                <p><i class="bi bi-cloud-drizzle me-2"></i>AQI SO₂: <span id="aqi_so22">--</span></p>
+                                <p><i class="bi bi-wind me-2"></i>PM2.5: <span id="pm252">--</span></p>
+                                <p><i class="bi bi-wind me-2"></i>PM10: <span id="pm102">--</span></p>
+                            </div>
+                            <hr class="border-light opacity-25">
+                            <small class="opacity-75">Cập nhật: <span id="update2">--</span></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay"
+            style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; display:flex; align-items:center; justify-content:center;">
+            <div class="spinner-border text-primary" role="status" style="width:3rem; height:3rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <!-- jQuery (bắt buộc cho DataTables) -->
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+        <!-- DataTables CSS & JS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+        <!-- XLSX.js CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+        <!-- Moment.js và Moment Timezone -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
+
+        <!-- ApexCharts CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+        <!-- Leaflet CDN -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <!-- Custom JavaScript -->
+        <script src="/js/admin/analytics.js"></script>
+        <script src="/js/admin/dashboard-wheather.js"></script>
+        <script src="/js/admin/analytics-chart.js"></script>
+        <script src="/js/components/toast.js"></script>
+    </div>
+    <!--end::App Content-->

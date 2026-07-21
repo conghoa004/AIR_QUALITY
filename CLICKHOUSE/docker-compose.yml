@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:25.10
+    container_name: clickhouse
+    restart: unless-stopped
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    volumes:
+    - clickhouse_data:/var/lib/clickhouse
+    - clickhouse_logs:/var/log/clickhouse-server
+    ports:
+      - "8123:8123"   # HTTP
+      - "9000:9000"   # Native client
+      - "9009:9009"   # Interserver
+    environment:
+      - CLICKHOUSE_DB=default
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=admin
+    networks:
+      - bigdata-network
+
+volumes:
+  clickhouse_data:
+  clickhouse_logs:
+
+networks:
+  bigdata-network:
+    external: true

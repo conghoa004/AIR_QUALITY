@@ -1,0 +1,16 @@
+/* Reset tooltip */
+.leaflet-popup-content-wrapper {
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+}
+
+.leaflet-popup-close-button {
+  display: none !important;
+}
