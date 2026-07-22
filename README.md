@@ -31,64 +31,7 @@ The **Multi-platform IoT Air Quality Monitoring & Prediction System** is a compr
 
 ## 🏗️ System Architecture & Data Flow
 
-### 1. High-Level System Architecture
-
-```text
-               +-----------------------------------+
-               |  Sensors / Mock Data (node1, 2)   |
-               +-----------------------------------+
-                                 |
-                            (MQTT / SSL)
-                                 v
-                       +-------------------+
-                       |    EMQX Broker    |  <--- CRL Server (Port 3000)
-                       +-------------------+
-                                 |
-                                 v
-                       +-------------------+
-                       |   Apache Kafka    |  <--- Topics: air_quality, tracking_aqi
-                       +-------------------+
-                                 |
-              +------------------+------------------+
-              |                                     |
-              v (air_quality)                       v (tracking_aqi)
-    +-------------------+                 +-------------------+
-    |  Spark Streaming  |                 | Tracking Consumer |
-    | (jobs/aqi-job.py) |                 | (kafka_consumer)  |
-    +-------------------+                 +-------------------+
-              |                                     |
-    +---------+---------+                           v
-    |                   |                  Expo Push Notification
-    v                   v                   & MongoDB Storage
-Firestore DB       ClickHouse DB
-(Realtime)         (hoaze database)
-    |                   |
-  +-+--+                v
-  |    |        +---------------+
-  v    v        |  AI Service   | (LSTM Forecast)
-Web   App       | (app.py:5000) |
-:4000 :4001     +---------------+
-```
-
-### 2. End-to-End Data Stream Pipeline
-
-```text
-[ Sensor Node ] ──(MQTT mTLS)──> [ EMQX Broker ] ──> [ Kafka Topic: air_quality ]
-                                                             │
-                                                             ▼
-                                                [ PySpark Streaming Job ]
-                                                   (jobs/aqi-job.py)
-                                                             │
-                   ┌─────────────────────────────────────────┼────────────────────────────────────────┐
-                   ▼                                         ▼                                        ▼
-      [ Firebase Firestore ]                    [ ClickHouse OLAP DB ]                 [ Kafka Topic: tracking_aqi ]
-    (Collection: air_quality)                  (Table: air_quality_realtime)                 (If AQI > 100)
-                   │                                         │                                        │
-                   ├───────────────┐                         ▼                                        ▼
-                   ▼               ▼                 [ AI Service ]                  [ Tracking Consumer ]
-               [ Web Admin ]  [ Mobile App ]         (Flask: 5000)                     (MongoDB & Expo Push)
-                (Port 4000)    (Port 4001)           Predict 24h AQI
-```
+![System Architecture & Data Flow](./Document/data_flow.png)
 
 ---
 
